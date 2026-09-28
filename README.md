@@ -1,36 +1,40 @@
 # IT Toolkit
 
-Navaja suiza de herramientas para técnicos IT.
+Pequeña navaja suiza para técnicos IT.
 
-## Versión actual
+## Herramientas actuales
 
-Aplicación 100% frontend:
+### 🌐 IP Calculator
 
-- IP/CIDR Calculator
-- Password Generator
-- JSON Formatter
-- Base64 Encoder/Decoder
-- JWT Decoder
-- Decimal/Hex/Binary Converter
+Calculadora de redes IPv4 que permite obtener:
+
+- Dirección de red
+- Dirección de broadcast
+- Primer host
+- Último host
+- Número de hosts disponibles
+
+Trabaja con notación CIDR, por ejemplo:
+
+`192.168.1.25/24`
+
+### 🔐 Password Generator
+
+Generador de contraseñas aleatorias que permite seleccionar la longitud.
+
+Utiliza `crypto.getRandomValues()` del navegador para generar valores aleatorios de forma segura.
+
+## Tecnología
+
+Aplicación 100% frontend desarrollada con:
+
+- HTML
+- CSS
+- JavaScript
 
 No necesita backend, Python ni base de datos.
 
 ## Ejecutar localmente
 
-Puedes abrir `index.html` directamente en el navegador.
-
-Para desarrollo local también puedes usar:
-
 ```bash
 python -m http.server 5500
-```
-
-y abrir:
-
-```text
-http://127.0.0.1:5500
-```
-
-## Publicación
-
-La aplicación está preparada para servicios de hosting estático como GitHub Pages o Cloudflare Pages.

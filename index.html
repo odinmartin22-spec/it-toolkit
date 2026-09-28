@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0f172a">
-    <title>IT Toolkit</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<title>IT Toolkit</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
 <header class="site-header">
     <div class="container">
         <div class="brand">
@@ -21,97 +23,99 @@
 </header>
 
 <main class="container">
-    <section class="intro">
-        <h2>Navaja suiza para IT</h2>
-        <p>Herramientas que funcionan directamente en tu navegador. Sin instalar nada.</p>
-    </section>
 
-    <div class="tools-grid">
+<section class="intro">
+    <h2>Navaja suiza para IT</h2>
+    <p>Pequeñas herramientas para resolver tareas habituales de soporte y sistemas.</p>
+</section>
 
-        <article class="tool-card">
-            <div class="tool-title">
-                <span>🌐</span>
-                <h2>IP Calculator</h2>
-            </div>
-            <p class="description">Calcula una red IPv4 a partir de una dirección CIDR.</p>
-            <input id="ipInput" type="text" placeholder="192.168.1.0/24" autocomplete="off">
-            <button id="calculateIp">Calcular</button>
-            <div id="ipResult" class="result"></div>
-        </article>
+<div class="tools-grid">
 
-        <article class="tool-card">
-            <div class="tool-title">
-                <span>🔐</span>
-                <h2>Password Generator</h2>
-            </div>
-            <p class="description">Genera contraseñas aleatorias y seguras.</p>
-            <div class="inline-controls">
-                <label>
-                    Longitud
-                    <input id="passwordLength" type="number" min="4" max="128" value="20">
-                </label>
-            </div>
-            <button id="generatePassword">Generar</button>
-            <div id="passwordResult" class="result selectable"></div>
-        </article>
+<article class="tool-card">
 
-        <article class="tool-card">
-            <div class="tool-title">
-                <span>📋</span>
-                <h2>JSON Formatter</h2>
-            </div>
-            <p class="description">Formatea y valida JSON rápidamente.</p>
-            <textarea id="jsonInput" placeholder='{"name":"IT Toolkit","version":1}'></textarea>
-            <button id="formatJson">Formatear JSON</button>
-            <div id="jsonResult" class="result"></div>
-        </article>
-
-        <article class="tool-card">
-            <div class="tool-title">
-                <span>🔤</span>
-                <h2>Base64</h2>
-            </div>
-            <p class="description">Codifica o decodifica texto en Base64.</p>
-            <textarea id="base64Input" placeholder="Introduce texto..."></textarea>
-            <div class="button-row">
-                <button id="encodeBase64">Codificar</button>
-                <button id="decodeBase64" class="secondary">Decodificar</button>
-            </div>
-            <div id="base64Result" class="result selectable"></div>
-        </article>
-
-        <article class="tool-card">
-            <div class="tool-title">
-                <span>🔑</span>
-                <h2>JWT Decoder</h2>
-            </div>
-            <p class="description">Visualiza el header y payload de un JWT sin enviarlo a ningún servidor.</p>
-            <textarea id="jwtInput" placeholder="eyJhbGciOiJIUzI1NiIs..."></textarea>
-            <button id="decodeJwt">Decodificar</button>
-            <pre id="jwtResult" class="result code-result"></pre>
-        </article>
-
-        <article class="tool-card">
-            <div class="tool-title">
-                <span>🧮</span>
-                <h2>Number Converter</h2>
-            </div>
-            <p class="description">Convierte números entre decimal, hexadecimal y binario.</p>
-            <input id="numberInput" type="text" placeholder="255">
-            <div class="button-row">
-                <button id="convertNumber">Convertir</button>
-                <button id="clearNumber" class="secondary">Limpiar</button>
-            </div>
-            <div id="numberResult" class="result"></div>
-        </article>
-
+    <div class="tool-title">
+        <span>🌐</span>
+        <h2>IP Calculator</h2>
     </div>
+
+    <p class="description">
+        Calcula la red, broadcast, hosts disponibles y rango de una red IPv4 usando CIDR.
+    </p>
+
+    <label for="ipInput">Dirección IPv4 / CIDR</label>
+
+    <input
+        id="ipInput"
+        type="text"
+        placeholder="192.168.1.25/24"
+        autocomplete="off"
+    >
+
+    <button id="calculateIp">
+        Calcular red
+    </button>
+
+    <div id="ipResult" class="result"></div>
+
+</article>
+
+
+<article class="tool-card">
+
+    <div class="tool-title">
+        <span>🔐</span>
+        <h2>Password Generator</h2>
+    </div>
+
+    <p class="description">
+        Genera contraseñas aleatorias utilizando el generador criptográfico del navegador.
+    </p>
+
+    <label for="passwordLength">
+        Longitud
+    </label>
+
+    <input
+        id="passwordLength"
+        type="number"
+        min="4"
+        max="128"
+        value="20"
+    >
+
+    <button id="generatePassword">
+        Generar contraseña
+    </button>
+
+    <div id="passwordResult" class="result selectable"></div>
+
+</article>
+
+</div>
+
+
+<section class="project-info">
+
+    <h2>Sobre el proyecto</h2>
+
+    <p>
+        IT Toolkit es un proyecto de aprendizaje desarrollado con HTML,
+        CSS y JavaScript. Actualmente funciona completamente en el navegador,
+        sin backend.
+    </p>
+
+</section>
+
 </main>
 
+
 <footer>
-    <p>IT Toolkit · Frontend-only · Tus datos permanecen en tu navegador</p>
+    <p>
+        IT Toolkit · Frontend-only · Los datos permanecen en tu navegador
+    </p>
 </footer>
 
 <script src="script.js"></script>
+
 </body>
 </html>

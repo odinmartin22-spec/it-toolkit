@@ -1,35 +1,36 @@
-// ==============================
-// IT Toolkit - Frontend only
-// ==============================
-
-// ---------- Helpers ----------
+// IT Toolkit - frontend only
 
 function showError(element, message) {
     element.innerHTML = `<span class="error">${message}</span>`;
 }
 
-function showSuccess(element, message) {
-    element.innerHTML = `<span class="success">${message}</span>`;
-}
 
-// ---------- IP Calculator ----------
+// =========================
+// IP CALCULATOR
+// =========================
 
 function ipv4ToNumber(ip) {
+
     const parts = ip.split(".").map(Number);
 
     if (
         parts.length !== 4 ||
-        parts.some(part => !Number.isInteger(part) || part < 0 || part > 255)
+        parts.some(
+            p => !Number.isInteger(p) || p < 0 || p > 255
+        )
     ) {
-        throw new Error("Dirección IPv4 no válida.");
+        throw new Error("La dirección IPv4 no es válida.");
     }
 
     return (
-        ((parts[0] * 256 + parts[1]) * 256 + parts[2]) * 256 + parts[3]
+        ((parts[0] * 256 + parts[1]) * 256 + parts[2]) * 256 +
+        parts[3]
     );
 }
 
+
 function numberToIpv4(number) {
+
     return [
         Math.floor(number / 16777216) % 256,
         Math.floor(number / 65536) % 256,
@@ -38,41 +39,60 @@ function numberToIpv4(number) {
     ].join(".");
 }
 
+
 function calculateNetwork(cidr) {
+
     const parts = cidr.trim().split("/");
 
     if (parts.length !== 2) {
-        throw new Error("Usa el formato 192.168.1.0/24");
+        throw new Error(
+            "Usa el formato 192.168.1.25/24"
+        );
     }
 
-    const ip = parts[0];
     const prefix = Number(parts[1]);
 
-    if (!Number.isInteger(prefix) || prefix < 0 || prefix > 32) {
-        throw new Error("El prefijo debe estar entre 0 y 32.");
+    if (
+        !Number.isInteger(prefix) ||
+        prefix < 0 ||
+        prefix > 32
+    ) {
+        throw new Error(
+            "El prefijo CIDR debe estar entre 0 y 32."
+        );
     }
 
-    const ipNumber = ipv4ToNumber(ip);
+    const ipNumber = ipv4ToNumber(parts[0]);
 
-    // JavaScript bitwise operations are signed 32-bit.
-    // >>> 0 converts the result back to an unsigned number.
-    const mask = prefix === 0 ? 0 : (0xFFFFFFFF << (32 - prefix)) >>> 0;
-    const network = (ipNumber & mask) >>> 0;
-    const broadcast = (network | (~mask >>> 0)) >>> 0;
+    const mask =
+        prefix === 0
+            ? 0
+            : (0xFFFFFFFF << (32 - prefix)) >>> 0;
+
+    const network =
+        (ipNumber & mask) >>> 0;
+
+    const broadcast =
+        (network | (~mask >>> 0)) >>> 0;
 
     let firstHost;
     let lastHost;
     let hosts;
 
     if (prefix === 32) {
+
         firstHost = network;
         lastHost = network;
         hosts = 1;
+
     } else if (prefix === 31) {
+
         firstHost = network;
         lastHost = broadcast;
         hosts = 2;
+
     } else {
+
         firstHost = network + 1;
         lastHost = broadcast - 1;
         hosts = broadcast - network - 1;
@@ -87,179 +107,91 @@ function calculateNetwork(cidr) {
     };
 }
 
-document.getElementById("calculateIp").addEventListener("click", () => {
-    const input = document.getElementById("ipInput");
-    const result = document.getElementById("ipResult");
 
-    try {
-        const data = calculateNetwork(input.value);
+document
+    .getElementById("calculateIp")
+    .addEventListener("click", () => {
 
-        result.innerHTML = `
-            <p><strong>Network:</strong> ${data.network}</p>
-            <p><strong>Broadcast:</strong> ${data.broadcast}</p>
-            <p><strong>First Host:</strong> ${data.firstHost}</p>
-            <p><strong>Last Host:</strong> ${data.lastHost}</p>
-            <p><strong>Hosts:</strong> ${data.hosts}</p>
-        `;
-    } catch (error) {
-        showError(result, error.message);
-    }
-});
+        const result =
+            document.getElementById("ipResult");
 
-// ---------- Password Generator ----------
+        try {
 
-document.getElementById("generatePassword").addEventListener("click", () => {
-    const lengthInput = document.getElementById("passwordLength");
-    const result = document.getElementById("passwordResult");
+            const data = calculateNetwork(
+                document.getElementById("ipInput").value
+            );
 
-    let length = Number(lengthInput.value);
+            result.innerHTML = `
+                <p><strong>Network:</strong> ${data.network}</p>
+                <p><strong>Broadcast:</strong> ${data.broadcast}</p>
+                <p><strong>First Host:</strong> ${data.firstHost}</p>
+                <p><strong>Last Host:</strong> ${data.lastHost}</p>
+                <p><strong>Hosts:</strong> ${data.hosts}</p>
+            `;
 
-    if (!Number.isInteger(length) || length < 4 || length > 128) {
-        showError(result, "La longitud debe estar entre 4 y 128.");
-        return;
-    }
+        } catch (error) {
 
-    const characters =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
-
-    const values = new Uint32Array(length);
-    crypto.getRandomValues(values);
-
-    let password = "";
-
-    for (let i = 0; i < length; i++) {
-        password += characters[values[i] % characters.length];
-    }
-
-    result.textContent = password;
-});
-
-// ---------- JSON Formatter ----------
-
-document.getElementById("formatJson").addEventListener("click", () => {
-    const input = document.getElementById("jsonInput");
-    const result = document.getElementById("jsonResult");
-
-    try {
-        const parsed = JSON.parse(input.value);
-        result.textContent = JSON.stringify(parsed, null, 2);
-    } catch {
-        showError(result, "El contenido no es un JSON válido.");
-    }
-});
-
-// ---------- Base64 ----------
-
-function utf8ToBase64(text) {
-    const bytes = new TextEncoder().encode(text);
-    let binary = "";
-
-    bytes.forEach(byte => {
-        binary += String.fromCharCode(byte);
+            showError(
+                result,
+                error.message
+            );
+        }
     });
 
-    return btoa(binary);
-}
 
-function base64ToUtf8(base64) {
-    const binary = atob(base64.trim());
-    const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
-    return new TextDecoder().decode(bytes);
-}
+// =========================
+// PASSWORD GENERATOR
+// =========================
 
-document.getElementById("encodeBase64").addEventListener("click", () => {
-    const input = document.getElementById("base64Input");
-    const result = document.getElementById("base64Result");
+document
+    .getElementById("generatePassword")
+    .addEventListener("click", () => {
 
-    try {
-        result.textContent = utf8ToBase64(input.value);
-    } catch {
-        showError(result, "No se pudo codificar el texto.");
-    }
-});
+        const result =
+            document.getElementById("passwordResult");
 
-document.getElementById("decodeBase64").addEventListener("click", () => {
-    const input = document.getElementById("base64Input");
-    const result = document.getElementById("base64Result");
+        const length =
+            Number(
+                document.getElementById("passwordLength").value
+            );
 
-    try {
-        result.textContent = base64ToUtf8(input.value);
-    } catch {
-        showError(result, "El contenido no es un Base64 válido.");
-    }
-});
+        if (
+            !Number.isInteger(length) ||
+            length < 4 ||
+            length > 128
+        ) {
 
-// ---------- JWT Decoder ----------
+            showError(
+                result,
+                "La longitud debe estar entre 4 y 128 caracteres."
+            );
 
-function decodeBase64Url(value) {
-    let base64 = value.replace(/-/g, "+").replace(/_/g, "/");
-
-    while (base64.length % 4) {
-        base64 += "=";
-    }
-
-    return decodeURIComponent(
-        atob(base64)
-            .split("")
-            .map(char => "%" + char.charCodeAt(0).toString(16).padStart(2, "0"))
-            .join("")
-    );
-}
-
-document.getElementById("decodeJwt").addEventListener("click", () => {
-    const input = document.getElementById("jwtInput");
-    const result = document.getElementById("jwtResult");
-
-    try {
-        const parts = input.value.trim().split(".");
-
-        if (parts.length !== 3) {
-            throw new Error("Un JWT debe tener tres partes separadas por puntos.");
+            return;
         }
 
-        const header = JSON.parse(decodeBase64Url(parts[0]));
-        const payload = JSON.parse(decodeBase64Url(parts[1]));
+        const characters =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
 
-        result.textContent = JSON.stringify(
-            {
-                header,
-                payload,
-                note: "Este decoder solo lee el JWT. No verifica su firma."
-            },
-            null,
-            2
-        );
-    } catch (error) {
-        result.textContent = `Error: ${error.message}`;
-    }
-});
+        const values =
+            new Uint32Array(length);
 
-// ---------- Number Converter ----------
+        crypto.getRandomValues(values);
 
-document.getElementById("convertNumber").addEventListener("click", () => {
-    const input = document.getElementById("numberInput");
-    const result = document.getElementById("numberResult");
+        let password = "";
 
-    const value = input.value.trim();
+        for (let i = 0; i < length; i++) {
 
-    if (!/^\d+$/.test(value)) {
-        showError(result, "Introduce un número decimal entero positivo.");
-        return;
-    }
+            password +=
+                characters[
+                    values[i] % characters.length
+                ];
+        }
 
-    const decimal = BigInt(value);
+        result.textContent = password;
+    });
 
-    result.innerHTML = `
-        <p><strong>Decimal:</strong> ${decimal}</p>
-        <p><strong>Hex:</strong> 0x${decimal.toString(16).toUpperCase()}</p>
-        <p><strong>Binary:</strong> ${decimal.toString(2)}</p>
-    `;
-});
 
-document.getElementById("clearNumber").addEventListener("click", () => {
-    document.getElementById("numberInput").value = "";
-    document.getElementById("numberResult").textContent = "";
-});
-
-// Generate an initial password so the card is useful immediately.
-document.getElementById("generatePassword").click();
+// Generate password when the page loads
+document
+    .getElementById("generatePassword")
+    .click();
